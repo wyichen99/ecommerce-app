@@ -51,6 +51,11 @@ function App() {
     setToken(newToken);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove the token from localStorage
+    setToken(null); // Update the state to reflect that the user is logged out
+  };
+
   if (!token) {
     return <LoginForm onLoginSuccess={handleLoginSuccess} />;
   }
@@ -78,6 +83,7 @@ function App() {
             </Dropdown.Item>
           ))}
         </DropdownButton>
+        {token && <button onClick={handleLogout} style={{ marginLeft: '10px' }}>Logout</button>}
       </Navbar>
       
       <Routes>
