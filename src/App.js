@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // Assuming axios is used for API requests
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col, Card, Form, Navbar, Nav, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Navbar, Nav, Dropdown, DropdownButton, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import CartPage from './cartPage';
 import { useCart } from './cartContext';
@@ -62,57 +62,66 @@ function App() {
 
   return (
     <Router>
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand as={Link} to="/">My E-Commerce App</Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/cart">Cart</Nav.Link>
-        </Nav>
-        <Form inline>
-          <Form.Control
-            type="text"
-            placeholder="Search by name"
-            className="mr-sm-2"
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </Form>
-        <DropdownButton id="dropdown-basic-button" title={selectedCategory || "Select Category"}>
-          <Dropdown.Item onClick={() => setSelectedCategory('')}>All Categories</Dropdown.Item>
-          {categories.map((category, index) => (
-            <Dropdown.Item key={index} onClick={() => setSelectedCategory(category)}>
-              {category}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        {token && <button onClick={handleLogout} style={{ marginLeft: '10px' }}>Logout</button>}
+      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
+        <Container>
+          <Navbar.Brand as={Link} to="/">My E-Commerce App</Navbar.Brand>
+          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Collapse id="navbarScroll">
+            <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: '100px' }} navbarScroll>
+              <Nav.Link as={Link} to="/cart">
+                <i className="fas fa-shopping-cart"></i> Cart
+              </Nav.Link>
+              <DropdownButton variant="secondary" title={selectedCategory || "Select Category"} className="ms-2">
+                <Dropdown.Item onClick={() => setSelectedCategory('')}>All Categories</Dropdown.Item>
+                {categories.map((category, index) => (
+                  <Dropdown.Item key={index} onClick={() => setSelectedCategory(category)}>
+                    {category}
+                  </Dropdown.Item>
+                ))}
+              </DropdownButton>
+            </Nav>
+            <Form className="d-flex">
+              <Form.Control
+                type="search"
+                placeholder="Search by name"
+                className="me-2"
+                aria-label="Search"
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </Form>
+            {token && (
+              <Button variant="outline-light" onClick={handleLogout} className="ms-2">
+                <i className="fas fa-sign-out-alt"></i> Logout
+              </Button>
+            )}
+          </Navbar.Collapse>
+        </Container>
       </Navbar>
-      
-      <Routes>
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/product/:productId" element={<ProductDetail />} />
-        <Route path="/" element={
-          <Container>
-            <Row>
-              {products.map(product => (
-                <Col key={product.id} sm={12} md={6} lg={4} xl={3}>
-                  
-                  <Card>
-                  <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Card.Img variant="top" src={product.thumbnail}  className="product-image"/>
+
+      <Container>
+        <Routes>
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/product/:productId" element={<ProductDetail />} />
+          <Route path="/" element={
+            <Row xs={1} md={2} lg={4} className="g-4">
+              {products.map((product) => (
+                <Col key={product.id}>
+                  <Card className="h-100 shadow-sm bg-white rounded">
+                    <Link to={`/product/${product.id}`} className="text-dark text-decoration-none">
+                      <Card.Img variant="top" src={product.thumbnail} alt={product.title} />
+                      <Card.Body>
+                        <Card.Title>{product.title}</Card.Title>
+                        <Card.Text>${product.price}</Card.Text>
+                        <button variant="primary" onClick={() => addToCart(product)}>Add to Cart</button>
+                      </Card.Body>
                     </Link>
-                    <Card.Body className="card-body">
-                      <Card.Title>{product.title}</Card.Title>
-                      <Card.Text>${product.price}</Card.Text>
-                      
-                      <button onClick={() => addToCart(product)}>Add to Cart</button>
-                    </Card.Body>
                   </Card>
-                  
                 </Col>
               ))}
             </Row>
-          </Container>
-        } />
-      </Routes>
+          } />
+        </Routes>
+      </Container>
     </Router>
   );
 }

@@ -12,18 +12,16 @@ code {
     monospace;
 }
 
-.product-image {
-  height: 200px; /* Set a fixed height */
-  width: 100%; /* Use the full width of the card */
-  object-fit: cover; /* Cover the area, maintain aspect ratio without distortion */
-}
-@media (max-width: 768px) {
-  .product-image {
-    height: 150px; /* Smaller height on smaller screens */
-  }
-}
+
 .card-body {
   height: 150px; /* Adjust based on your content */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Space out the title, text, and button */
+}
+
+.card-body1 {
+  height: 200px; /* Adjust based on your content */
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Space out the title, text, and button */
@@ -38,4 +36,23 @@ code {
 }
 .h-custom {
   height: calc(100% - 73px);
+}
+
+
+.card-img-top {
+  height: 200px; 
+  object-fit: cover; 
+}
+
+.product-card {
+  min-height: 400px; 
+}
+
+.product-title {
+  height: 50px; 
+  overflow: hidden; 
+}
+
+.product-price {
+  height: 30px; 
 }

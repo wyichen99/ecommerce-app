@@ -1,13 +1,13 @@
-// ProductDetail.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useCart } from './cartContext'; // Import useCart
+import { useCart } from './cartContext';
+import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
 
 function ProductDetail() {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const { addToCart } = useCart(); // Use the addToCart function from the context
+  const { addToCart } = useCart();
 
   useEffect(() => {
     axios.get(`https://dummyjson.com/products/${productId}`)
@@ -18,17 +18,46 @@ function ProductDetail() {
   }, [productId]);
 
   if (!product) {
-    return <div>Loading...</div>;
+    return <div className="text-center mt-5"><h3>Loading...</h3></div>;
   }
 
   return (
-    <div>
-      <h2>{product.title}</h2>
-      <img src={product.thumbnail} alt={product.title} style={{ maxWidth: '100%', height: 'auto' }} />
-      <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
-      <button onClick={() => addToCart(product)}>Add to Cart</button> 
-    </div>
+    <Container className="mt-5">
+      <Row className="justify-content-md-center">
+        <Col xs={12} md={8}>
+          <Card>
+            <Carousel interval={null}>
+              {product.images.map((img, index) => (
+                <Carousel.Item key={index}>
+                  <img
+                    className="d-block w-100"
+                    src={img}
+                    alt={`Slide ${index}`}
+                  />
+                </Carousel.Item>
+              ))}
+            </Carousel>
+
+            <Card.Body class="card-body1">
+              <Card.Title>{product.title}</Card.Title>
+              <Card.Text>
+                <strong>Description:</strong> {product.description}
+              </Card.Text>
+              <Card.Text>
+                <strong>Price:</strong> ${product.price}
+              </Card.Text>
+              <Card.Text>
+                <strong>Brand:</strong> {product.brand}
+              </Card.Text>
+              <Card.Text >
+                <strong>Rating:</strong> {product.rating} / 5
+              </Card.Text>
+              <Button className="mt-auto" variant="primary" onClick={() => addToCart(product)}>Add to Cart</Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
